@@ -1,0 +1,17 @@
+name: InventoryBomb
+version: ${project.version}
+main: net.dohaw.play.inventorybomb.InventoryBomb
+api-version: 1.13
+depend:
+  - CoreAPI
+commands:
+  inventorybomb:
+    aliases:
+      - ib
+      - inventoryb
+      - invb
+      - invbomb
+
+permissions:
+  inventorybomb.use:
+    default: op
