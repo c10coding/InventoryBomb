@@ -52,6 +52,15 @@ public final class InventoryBomb extends APIHook {
         return 3;
     }
 
+    public int getPickupTimeout(){
+        if(getConfig().get("Pickup Timeout") != null){
+            if(getAPI().getMathHelper().isInt(getConfig().getString("Pickup Timeout"))){
+                return getConfig().getInt("Pickup Timeout");
+            }
+        }
+        return 5;
+    }
+
     public String getPrefix(){
         return PREFIX;
     }

@@ -1,5 +1,7 @@
 package net.dohaw.play.inventorybomb.commands;
 
+import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
 import me.c10coding.coreapi.chat.ChatFactory;
 import me.c10coding.coreapi.helpers.MathHelper;
 import net.dohaw.play.inventorybomb.InventoryBomb;
@@ -28,6 +30,7 @@ public class InventoryBombCommand implements CommandExecutor {
     private MathHelper mathHelper;
     private final String PREFIX;
     private int radius;
+    private int pickupTimeout;
 
     public InventoryBombCommand(InventoryBomb plugin){
         this.plugin = plugin;
@@ -35,6 +38,7 @@ public class InventoryBombCommand implements CommandExecutor {
         this.PREFIX = plugin.getPrefix();
         this.mathHelper = plugin.getAPI().getMathHelper();
         this.radius = plugin.getRadius();
+        this.pickupTimeout = plugin.getPickupTimeout();
     }
 
     @Override
@@ -65,6 +69,7 @@ public class InventoryBombCommand implements CommandExecutor {
         }else if(args[0].equalsIgnoreCase("reload")){
             plugin.reloadConfig();
             this.radius = plugin.getRadius();
+            this.pickupTimeout = plugin.getPickupTimeout();
             chatFactory.sendPlayerMessage("&aReloaded the config!", true, sender, PREFIX);
         }
         return false;
@@ -93,6 +98,12 @@ public class InventoryBombCommand implements CommandExecutor {
 
         player.getWorld().spawnParticle(Particle.END_ROD, playerLocation, 50);
         player.getWorld().playSound(playerLocation, Sound.ENTITY_GENERIC_EXPLODE, 1, 1);
+        player.setCanPickupItems(false);
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+            player.setCanPickupItems(true);
+        }, pickupTimeout * 20);
+
 
     }
 
