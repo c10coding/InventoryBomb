@@ -108,7 +108,7 @@ public class InventoryBombCommand implements CommandExecutor {
             }
         }
 
-        int randomIndex = mathHelper.getRandomInteger(listOnlinePlayers.size() - 1, 0);
+        int randomIndex = mathHelper.getRandomInteger(listOnlinePlayers.size(), 0);
         Player randomPlayer = listOnlinePlayers.get(randomIndex);
         bombInventory(randomPlayer);
     }
