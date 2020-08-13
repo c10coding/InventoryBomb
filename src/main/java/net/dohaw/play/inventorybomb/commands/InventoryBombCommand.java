@@ -80,19 +80,23 @@ public class InventoryBombCommand implements CommandExecutor {
         PlayerInventory playerInventory = player.getInventory();
         List<ItemStack> invItems = Arrays.asList(playerInventory.getStorageContents());
         final Location playerLocation = player.getLocation();
+        List<Material> exclusions = Arrays.asList(new Material[]{Material.PLAYER_HEAD});
 
         for(int x = 0; x < invItems.size(); x++){
             if(playerInventory.getItem(x) != null){
 
                 ItemStack currentItem = invItems.get(x);
-                playerInventory.setItem(x, null);
+                Material mat = currentItem.getType();
 
-                int randXAlter = mathHelper.getRandomInteger(radius, radius * -1);
-                int randZAlter = mathHelper.getRandomInteger(radius, radius * -1);
-                Location itemDropLocation = new Location(player.getWorld(), playerLocation.getX() + randXAlter, playerLocation.getY() + 2, playerLocation.getZ() + randZAlter);
+                if(!exclusions.contains(mat)){
 
-                itemDropLocation.getWorld().dropItem(itemDropLocation, currentItem);
+                    playerInventory.setItem(x, null);
+                    int randXAlter = mathHelper.getRandomInteger(radius, radius * -1);
+                    int randZAlter = mathHelper.getRandomInteger(radius, radius * -1);
+                    Location itemDropLocation = new Location(player.getWorld(), playerLocation.getX() + randXAlter, playerLocation.getY() + 2, playerLocation.getZ() + randZAlter);
 
+                    itemDropLocation.getWorld().dropItem(itemDropLocation, currentItem);
+                }
             }
         }
 
@@ -103,7 +107,6 @@ public class InventoryBombCommand implements CommandExecutor {
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
             player.setCanPickupItems(true);
         }, pickupTimeout * 20);
-
 
     }
 
