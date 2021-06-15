@@ -1,10 +1,7 @@
-package net.dohaw.play.inventorybomb.commands;
+package net.dohaw.play.inventorybomb;
 
-import javafx.concurrent.Task;
-import javafx.concurrent.Worker;
-import me.c10coding.coreapi.chat.ChatFactory;
-import me.c10coding.coreapi.helpers.MathHelper;
-import net.dohaw.play.inventorybomb.InventoryBomb;
+import net.dohaw.corelib.ResponderFactory;
+import net.dohaw.corelib.helpers.MathHelper;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -25,18 +22,14 @@ import java.util.Set;
  */
 public class InventoryBombCommand implements CommandExecutor {
 
-    private InventoryBomb plugin;
-    private ChatFactory chatFactory;
-    private MathHelper mathHelper;
+    private InventoryBombPlugin plugin;
     private final String PREFIX;
     private int radius;
     private int pickupTimeout;
 
-    public InventoryBombCommand(InventoryBomb plugin){
+    public InventoryBombCommand(InventoryBombPlugin plugin){
         this.plugin = plugin;
-        this.chatFactory = plugin.getAPI().getChatFactory();
         this.PREFIX = plugin.getPrefix();
-        this.mathHelper = plugin.getAPI().getMathHelper();
         this.radius = plugin.getRadius();
         this.pickupTimeout = plugin.getPickupTimeout();
     }
@@ -44,6 +37,7 @@ public class InventoryBombCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
+        ResponderFactory rf = new ResponderFactory(sender, PREFIX);
         if(args[0].equalsIgnoreCase("t") || args[0].equalsIgnoreCase("p")){
             if(args.length == 2){
                 String playerName = args[1];
@@ -52,7 +46,7 @@ public class InventoryBombCommand implements CommandExecutor {
                         Player player = Bukkit.getPlayer(playerName);
                         bombInventory(player);
                     }else{
-                        chatFactory.sendPlayerMessage("This is not a valid player!", true, sender, PREFIX);
+                        rf.sendMessage("&cThis is not a valid player!");
                     }
                 }else if(args[0].equalsIgnoreCase("t")){
                     String teamName = args[1];
@@ -61,7 +55,7 @@ public class InventoryBombCommand implements CommandExecutor {
                             Team team = Bukkit.getScoreboardManager().getMainScoreboard().getTeam(teamName);
                             bombInventory(team);
                         }else{
-                            chatFactory.sendPlayerMessage("This is not a valid team!", true, sender, PREFIX);
+                            rf.sendMessage("&cThis is not a valid team!");
                         }
                     }
                 }
@@ -70,7 +64,7 @@ public class InventoryBombCommand implements CommandExecutor {
             plugin.reloadConfig();
             this.radius = plugin.getRadius();
             this.pickupTimeout = plugin.getPickupTimeout();
-            chatFactory.sendPlayerMessage("&aReloaded the config!", true, sender, PREFIX);
+            rf.sendMessage("&aReloaded the config!");
         }
         return false;
     }
@@ -91,8 +85,8 @@ public class InventoryBombCommand implements CommandExecutor {
                 if(!exclusions.contains(mat)){
 
                     playerInventory.setItem(x, null);
-                    int randXAlter = mathHelper.getRandomInteger(radius, radius * -1);
-                    int randZAlter = mathHelper.getRandomInteger(radius, radius * -1);
+                    int randXAlter = MathHelper.getRandomInteger(radius, radius * -1);
+                    int randZAlter = MathHelper.getRandomInteger(radius, radius * -1);
                     Location itemDropLocation = new Location(player.getWorld(), playerLocation.getX() + randXAlter, playerLocation.getY() + 2, playerLocation.getZ() + randZAlter);
 
                     itemDropLocation.getWorld().dropItem(itemDropLocation, currentItem);
@@ -122,10 +116,10 @@ public class InventoryBombCommand implements CommandExecutor {
             }
         }
 
-        int randomIndex = mathHelper.getRandomInteger(listOnlinePlayers.size(), 0);
+        int randomIndex = MathHelper.getRandomInteger(listOnlinePlayers.size(), 0);
         Player randomPlayer = listOnlinePlayers.get(randomIndex);
         bombInventory(randomPlayer);
-    }
 
+    }
 
 }

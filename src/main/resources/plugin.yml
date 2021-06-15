@@ -1,6 +1,6 @@
 name: InventoryBomb
 version: ${project.version}
-main: net.dohaw.play.inventorybomb.InventoryBomb
+main: net.dohaw.play.inventorybomb.InventoryBombPlugin
 api-version: 1.13
 depend:
   - CoreAPI

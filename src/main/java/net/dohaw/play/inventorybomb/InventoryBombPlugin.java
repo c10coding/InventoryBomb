@@ -1,8 +1,9 @@
 package net.dohaw.play.inventorybomb;
 
-import me.c10coding.coreapi.APIHook;
-import net.dohaw.play.inventorybomb.commands.InventoryBombCommand;
+import net.dohaw.corelib.CoreLib;
+import net.dohaw.corelib.helpers.MathHelper;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 
@@ -11,14 +12,14 @@ import java.io.File;
     For: mithzan
     Description: A plugin that drops all the person's items (minus equipped things) on the floor around a player at a certain radius
  */
-public final class InventoryBomb extends APIHook {
+public final class InventoryBombPlugin extends JavaPlugin {
 
     private final String PREFIX = "[&bInventoryBomb&r]";
 
     @Override
     public void onEnable() {
 
-        hookAPI(this);
+        CoreLib.setInstance(this);
         getLogger().info("CoreAPI Hooked!");
 
         validateFiles();
@@ -45,7 +46,7 @@ public final class InventoryBomb extends APIHook {
 
     public int getRadius(){
         if(getConfig().get("Radius") != null){
-            if(getAPI().getMathHelper().isInt(getConfig().getString("Radius"))){
+            if(MathHelper.isInt(getConfig().getString("Radius"))){
                 return getConfig().getInt("Radius");
             }
         }
@@ -54,7 +55,7 @@ public final class InventoryBomb extends APIHook {
 
     public int getPickupTimeout(){
         if(getConfig().get("Pickup Timeout") != null){
-            if(getAPI().getMathHelper().isInt(getConfig().getString("Pickup Timeout"))){
+            if(MathHelper.isInt(getConfig().getString("Pickup Timeout"))){
                 return getConfig().getInt("Pickup Timeout");
             }
         }
